@@ -2,8 +2,7 @@ import { DRONES } from "../models/drones.js";
 import coordValidate from "./droneChecker.js";
 
 
-const addData = (data) => {
-  const timestamp = data["report"]["deviceInformation"]["deviceStarted"];
+const addData = (data, timestamp) => {
   const drones = data["report"]["capture"]["drone"];
 
   drones.forEach(
@@ -32,4 +31,21 @@ const addData = (data) => {
   )
 }
 
-export default { addData }
+const getAllDrone = () => {
+  return {...DRONES};
+}
+
+const getDroneBySerialNumber = (id) => {
+  return id in DRONES ? DRONES[id] : undefined;
+}
+
+const getAllViolatedDrone = () => {
+  return Object.keys(DRONES).find(
+    key => {
+      const drone = DRONES[key];
+      return drone["violationCount"] > 0;
+    }
+  )
+}
+
+export default { addData, getAllDrone, getAllViolatedDrone, getDroneBySerialNumber }

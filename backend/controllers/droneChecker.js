@@ -13,7 +13,7 @@ const dist_square = (pointA, pointB) => {
 const coordValidate = ( coord, timestamp ) => {
   const violated = dist_square(coord, ORIGIN) < RADIUS_SQUARE;
   const coordObj = { timestamp, coord, violated }
-  return { coordObj, isViolated : violated}
+  return { coordObj, isViolated : violated }
 } 
 
 export default coordValidate
