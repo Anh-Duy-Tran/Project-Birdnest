@@ -1,1 +1,1 @@
-export const DRONES = [];
+export const DRONES = {};

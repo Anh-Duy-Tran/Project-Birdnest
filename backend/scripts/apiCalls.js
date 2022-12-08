@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
-import { DRONES } from '../models/drones.js';
+import { DATA } from '../models/data.js';
+import droneController from '../controllers/drones.js'
 
 const API_INTERVAL = 2;
 const TIME_INTERVAL = 10;
@@ -25,9 +26,11 @@ function apiCalls(){
       const XMLdata = values[0].data;
 
       let jObj = parser.parse(XMLdata);
-      DRONES.push(jObj);
-      if ( DRONES.length > MAX_STORE_DRONE ) {
-        DRONES.shift();
+      DATA.push(jObj);
+      droneController.addData(jObj)
+      if ( DATA.length > MAX_STORE_DRONE ) {
+        // TODO: remove the data from DRONES also
+        DATA.shift();
       }
       apiCalls();
     });

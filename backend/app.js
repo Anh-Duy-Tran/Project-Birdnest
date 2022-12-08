@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import apiCalls from './scripts/apiCalls.js';
 
-import droneRouter from './controllers/drones.js';
+import droneRouter from './router/drones.js';
 
 apiCalls();
 

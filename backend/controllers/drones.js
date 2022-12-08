@@ -1,26 +1,35 @@
-import { Router } from 'express';
-import { DRONES } from '../models/drones.js';
-
-import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const droneRouter = Router();
-
-droneRouter.get('/all', (req, res) => {
-  return res.json(DRONES);
-})
-
-droneRouter.get('/ndz', (req, res) => {
-
-})
-
-droneRouter.get('/connect', (req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, '../public') });
-})
+import { DRONES } from "../models/drones.js";
+import coordValidate from "./droneChecker.js";
 
 
+const addData = (data) => {
+  const timestamp = data["report"]["deviceInformation"]["deviceStarted"];
+  const drones = data["report"]["capture"]["drone"];
 
-export default droneRouter;
+  drones.forEach(
+    drone => {
+      const serialNumber = drone["serialNumber"];
+      
+      const coord = {
+        x : drone["positionX"],
+        y : drone["positionY"],
+        z : drone["altitude"]
+      }
+      
+      const { coordObj, isViolated } = coordValidate(coord, timestamp)
+      
+      if (serialNumber in DRONES) {
+        const drone = DRONES[serialNumber];
+        drone["coords"].push(coordObj);
+        drone["violationCount"] += isViolated ? 1 : 0;
+      } else {
+        const metaData = (({positionY, positionX, altitude, ...data }) => ({ info : data}))(drone)
+        metaData["coords"] = [coordObj]
+        metaData["violationCount"] = isViolated ? 1 : 0;        
+        DRONES[serialNumber] = metaData;
+      }
+    }
+  )
+}
+
+export default { addData }
