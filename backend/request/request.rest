@@ -1,4 +1,4 @@
-GET http://localhost:3001/api/drones/SN-cVDYoTGfhv
+GET http://localhost:3001/api/drones/SN-d7WuJR3Tgh
 
 ###
 GET http://localhost:3001/api/drones/all

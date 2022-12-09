@@ -2,9 +2,10 @@ import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 import { DATA } from '../models/data.js';
 import droneController from '../controllers/drones.js'
+import socket from '../utils/socket-io.js'
 
 const API_INTERVAL = 2;
-const TIME_INTERVAL = 10;
+const TIME_INTERVAL = 0.1;
 
 const MAX_STORE_DRONE = TIME_INTERVAL*60 / API_INTERVAL;
 
@@ -27,11 +28,15 @@ function apiCalls(){
       const XMLdata = values[0].data;
 
       let jObj = parser.parse(XMLdata);
+      
       DATA.push(jObj);
+
       droneController.addData(jObj, (new Date()).toISOString());
 
+      socket.updateData(jObj);
+
       if ( DATA.length > MAX_STORE_DRONE ) {
-        // TODO: remove the data from DRONES also
+        droneController.removeData(DATA[0]);
         DATA.shift();
       }
       apiCalls();

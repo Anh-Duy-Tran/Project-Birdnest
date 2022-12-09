@@ -15,16 +15,18 @@ const addData = (data, timestamp) => {
         z : drone["altitude"]
       }
       
-      const { coordObj, isViolated } = coordValidate(coord, timestamp)
+      const { coordObj, isViolated, distanceToOrigin } = coordValidate(coord, timestamp)
       
       if (serialNumber in DRONES) {
         const drone = DRONES[serialNumber];
         drone["coords"].push(coordObj);
         drone["violationCount"] += isViolated ? 1 : 0;
+        drone["closestDistance"] = Math.min(distanceToOrigin, drone["closestDistance"]);    
       } else {
         const metaData = (({positionY, positionX, altitude, ...data }) => ({ info : data}))(drone)
         metaData["coords"] = [coordObj]
-        metaData["violationCount"] = isViolated ? 1 : 0;        
+        metaData["violationCount"] = isViolated ? 1 : 0;
+        metaData["closestDistance"] = distanceToOrigin;        
         DRONES[serialNumber] = metaData;
       }
     }
@@ -40,12 +42,36 @@ const getDroneBySerialNumber = (id) => {
 }
 
 const getAllViolatedDrone = () => {
-  return Object.keys(DRONES).find(
+  return Object
+  .keys(DRONES).filter(
     key => {
-      const drone = DRONES[key];
-      return drone["violationCount"] > 0;
+      return DRONES[key]["violationCount"] > 0;
+    })
+  .map(
+    key => {
+      return {serialNumber : key, closestDistance : DRONES[key]["closestDistance"]}
     }
   )
 }
 
-export default { addData, getAllDrone, getAllViolatedDrone, getDroneBySerialNumber }
+const removeData = (data) => {
+  const drones = data["report"]["capture"]["drone"];
+  
+  drones.forEach(
+    drone => {
+      const serialNumber = drone["serialNumber"];
+      
+      const removedCoord = DRONES[serialNumber]["coords"].shift();
+      DRONES[serialNumber]["violationCount"] -= removedCoord["violated"] ? 1 : 0;
+
+      if (DRONES[serialNumber]["coords"].length === 0) {
+        delete DRONES[serialNumber]
+      }
+    }
+  )
+  
+  console.log(data);
+
+}
+
+export default { addData, getAllDrone, getAllViolatedDrone, getDroneBySerialNumber, removeData }
