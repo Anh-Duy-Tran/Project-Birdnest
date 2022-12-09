@@ -3,7 +3,7 @@ import Map from "../../components/Map";
 import styled from 'styled-components';
 import { useContext } from "react";
 import { DroneContext } from "../../contexts/DroneProvider";
-import { Stack } from "@mui/system";
+import DroneStack from "../../components/DroneStack";
 
 const Container = styled.div`
   display: grid;
@@ -14,7 +14,7 @@ const Body = styled.div`
   margin-top : 100px;
   margin-right : 50px;
   margin-left : 50px;
-
+  height: calc(100vh - 130px);
   display : grid;
   gap: 20px;
   grid-template-columns: 50% 50%;
@@ -27,7 +27,7 @@ const MainPage = () => {
       <Navbar/>
       <Body>
         <Map/>
-        <Stack/>
+        <DroneStack/>
       </Body>
     </Container>
   )

@@ -21,12 +21,12 @@ const DroneDiv = styled.div.attrs(props => ({
   transition: all 2s;
 `
 
-const Drone = ({x, y, name, width, height}) => {
+const Drone = ({x, y, name, width, height, onClick}) => {
   const [ state, dispatch ] = React.useContext(DroneContext);
   return (
     <DroneDiv x= {x * width / 500000} y={y * height / 500000}>
       <NameTag>{name}</NameTag>
-      <IconButton sx={{ color : "black"}}>
+      <IconButton sx={{ color : "black"}} onClick={onClick}>
         <RocketIcon></RocketIcon>
       </IconButton>
     </DroneDiv>

@@ -35,6 +35,20 @@ export const reducer = (state, action) => {
       }
     }
 
+    case "open-drone-dialog" : {
+      return {
+        ...state,
+        droneDialog : {...action.payload}
+      }
+    }
+
+    case "close-drone-dialog" : {
+      return {
+        ...state,
+        droneDialog : null
+      }
+    }
+
     default:
       return state
   }
@@ -45,5 +59,6 @@ export const initialState = {
   drones : null,
   violateDrones: null,
   mapsize: null,
-  violations: null
+  violations: null,
+  droneDialog: null
 }
