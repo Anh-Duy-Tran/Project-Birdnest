@@ -26,7 +26,7 @@ const addData = (data, timestamp) => {
         const metaData = (({positionY, positionX, altitude, ...data }) => ({ info : data}))(drone)
         metaData["coords"] = [coordObj]
         metaData["violationCount"] = isViolated ? 1 : 0;
-        metaData["closestDistance"] = distanceToOrigin;        
+        metaData["closestDistance"] = distanceToOrigin;  
         DRONES[serialNumber] = metaData;
       }
     }
@@ -49,7 +49,8 @@ const getAllViolatedDrone = () => {
     })
   .map(
     key => {
-      return {serialNumber : key, closestDistance : DRONES[key]["closestDistance"], history : getAllViolatedInstances(key) }
+      const {coords, ...info} = DRONES[key];
+      return {...info, closestDistance : DRONES[key]["closestDistance"], history : getAllViolatedInstances(key) }
     }
   )
 }
@@ -58,6 +59,10 @@ const getAllViolatedInstances = (droneId) => {
   return DRONES[droneId].coords.filter(
     coord => coord.violated
   )
+}
+
+const updateClosestDistance = (droneId) => {
+  DRONES[droneId].closestDistance = DRONES[droneId].coords.reduce( (a, c) => Math.min(a, c.distance), 500000);
 }
 
 const removeData = (data) => {
@@ -69,6 +74,8 @@ const removeData = (data) => {
       
       const removedCoord = DRONES[serialNumber]["coords"].shift();
       DRONES[serialNumber]["violationCount"] -= removedCoord["violated"] ? 1 : 0;
+      
+      updateClosestDistance(serialNumber);
 
       if (DRONES[serialNumber]["coords"].length === 0) {
         delete DRONES[serialNumber]
@@ -77,4 +84,8 @@ const removeData = (data) => {
   )
 }
 
-export default { addData, getAllDrone, getAllViolatedDrone, getDroneBySerialNumber, removeData }
+const isViolated = (droneId) => {
+  return droneId in DRONES ? DRONES[droneId].violationCount > 0 : undefined;
+}
+
+export default { addData, getAllDrone, getAllViolatedDrone, getDroneBySerialNumber, removeData, isViolated }

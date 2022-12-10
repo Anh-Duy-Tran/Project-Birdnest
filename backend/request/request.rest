@@ -5,4 +5,4 @@ GET http://localhost:3001/api/drones/all
 
 ###
 
-GET http://localhost:3001/api/drones/ndz
+GET http://localhost:3001/api/pilot/SN-LQzivYirvO

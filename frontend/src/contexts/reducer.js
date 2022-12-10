@@ -60,5 +60,6 @@ export const initialState = {
   violateDrones: null,
   mapsize: null,
   violations: null,
-  droneDialog: null
+  droneDialog: null,
+  pilotInfo: null
 }

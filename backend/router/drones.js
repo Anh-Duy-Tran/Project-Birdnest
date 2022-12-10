@@ -15,7 +15,7 @@ droneRouter.get('/ndz', (req, res) => {
 droneRouter.get('/:id', (req, res) => {
   const drone = dronesController.getDroneBySerialNumber(req.params.id);
   if (drone === undefined) {
-    return res.sendStatus(404).json({ error : "Drone not found."}).end();
+    return res.status(404).json({ error : "Drone not found."}).end();
   }
   return res.json(drone);
 })

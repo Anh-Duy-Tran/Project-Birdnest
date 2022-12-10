@@ -17,10 +17,14 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 
 import { DroneContext } from '../contexts/DroneProvider';
+import { Button } from '@mui/material';
 
-function createData(serialNumber, distance, history) {
+import styled from 'styled-components';
+
+function createData(info, distance, history) {
   return {
-    serialNumber,
+    info,
+    serialNumber : info.serialNumber,
     distance : Number((distance / 1000).toFixed(2)),
     lastSeen : new Date(history.at(-1).timestamp).toUTCString(),
     history : history.map(
@@ -70,12 +74,6 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'box',
-    numeric: false,
-    disablePadding: true,
-    label: '',
-  },
-  {
     id: 'serialNumber',
     numeric: false,
     disablePadding: false,
@@ -105,6 +103,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
+        <TableCell></TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -129,6 +128,22 @@ function EnhancedTableHead(props) {
       </TableRow>
     </TableHead>
   );
+}
+
+const Wrapper = styled.div`
+  display : flex;
+  padding-top : 10px;
+  padding-bottom : 10px;
+`
+
+const attributeLabel = {
+  "serialNumber" : "Serial Number",
+  "model" : "Model",
+  "manufacturer" : "Manufacturer",
+  "mac" : "Mac",
+  "ipv4" : "IPv4",
+  "ipv6" : "Ipv6",
+  "firmware" : "Firmware"
 }
 
 function Row(props) {
@@ -156,30 +171,53 @@ function Row(props) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="history">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell align="right">Position (meter)</TableCell>
-                    <TableCell align="right">Distance (meter)</TableCell>
-                  </TableRow>
-                </TableHead>
+            <Box sx={{ margin: 1, paddingBottom : 2 }}>
+              
+              <Wrapper>
+                <Typography variant="h6" gutterBottom component="div">
+                  Drone information
+                </Typography>
+                <Button variant="outlined" size = "small" sx={{marginLeft : "auto"}}>Get pilot information</Button>
+              </Wrapper>
 
+              <Table size="small" aria-label="history">
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.timestamp}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.timestamp}
-                      </TableCell>
-                      <TableCell align="right">{`(x : ${historyRow.coord.x}, y : ${historyRow.coord.y})`}</TableCell>
-                      <TableCell align="right">{historyRow.distance}</TableCell>
-                    </TableRow>
-                  ))}
+                  {
+                    Object.keys(row.info)
+                      .map((attribute) => (
+                        <TableRow key={attribute}>
+                          <TableCell align="left">{attributeLabel[attribute]}</TableCell>
+                          <TableCell align="right">{row.info[attribute]}</TableCell>
+                        </TableRow>
+                      ))}
                 </TableBody>
+                
+              </Table>
+                <Wrapper>
+                  <Typography variant="h6" gutterBottom component="div">
+                    History
+                  </Typography>
+                </Wrapper>
+                <Table size="small" aria-label="history">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Time recorded</TableCell>
+                      <TableCell align="right">Position (meter)</TableCell>
+                      <TableCell align="right">Distance (meter)</TableCell>
+                    </TableRow>
+                  </TableHead>
+
+                  <TableBody>
+                    {row.history.map((historyRow) => (
+                      <TableRow key={historyRow.timestamp}>
+                        <TableCell component="th" scope="row">
+                          {historyRow.timestamp}
+                        </TableCell>
+                        <TableCell align="right">{`(x : ${historyRow.coord.x}, y : ${historyRow.coord.y})`}</TableCell>
+                        <TableCell align="right">{historyRow.distance}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
                 
               </Table>
             </Box>
@@ -194,11 +232,17 @@ export default function DroneTable() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('serialNumber');
   const [selected, setSelected] = React.useState([]);
+  const [expanded, setExpanded] = React.useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  
   const [ state, dispatch ] = React.useContext(DroneContext);
+
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -226,7 +270,7 @@ export default function DroneTable() {
 
   const rows = state.violations !== null
     ? state.violations.map(
-        drone => createData(drone.serialNumber, drone.closestDistance, drone.history))
+        drone => createData(drone.info, drone.closestDistance, drone.history))
     : []
 
   return (
@@ -254,7 +298,7 @@ export default function DroneTable() {
       </TableContainer>
       <TablePagination
         sx={{marginTop : "auto"}}
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[10, 25, 50]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

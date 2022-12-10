@@ -8,7 +8,6 @@ const Container = styled.div`
   height: 80px;
   position: absolute;
   width: 100vw;
-  z-index: 10;
   background-color: #242730;
   color: white;
   font-family: jungkalight,sans-serif;
@@ -47,7 +46,6 @@ const Center = styled.div`
   justify-content: flex-center;
   align-items: center;
   text-align: center;
-  z-index: 10;
 `
 
 const Img = styled.img`
@@ -71,7 +69,7 @@ const Navbar = () => {
         </Center>
 
         <Right>
-          <p>By Anh Duy Tran</p>
+
         </Right>
         
       </Wrapper>

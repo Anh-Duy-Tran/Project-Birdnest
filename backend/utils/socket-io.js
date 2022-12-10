@@ -17,6 +17,10 @@ const socketConnection = (server) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
     });
+
+    socket.on('get-pilot-info', () => {
+      
+    })
   })
 }
 
