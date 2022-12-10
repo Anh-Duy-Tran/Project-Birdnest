@@ -75,9 +75,6 @@ const removeData = (data) => {
       }
     }
   )
-  
-  console.log(data);
-
 }
 
 export default { addData, getAllDrone, getAllViolatedDrone, getDroneBySerialNumber, removeData }

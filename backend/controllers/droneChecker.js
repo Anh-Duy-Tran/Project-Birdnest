@@ -12,7 +12,7 @@ const dist = (pointA, pointB) => {
 const coordValidate = ( coord, timestamp ) => {
   const distance = dist(coord, ORIGIN)
   const violated = distance < RADIUS;
-  const coordObj = { timestamp, coord, violated }
+  const coordObj = { timestamp, coord, violated, distance }
   return { coordObj, isViolated : violated, distanceToOrigin : distance }
 } 
 

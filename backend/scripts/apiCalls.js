@@ -34,13 +34,13 @@ function apiCalls(){
       // TODO: read the timestamp from the fetched data.
       droneController.addData(jObj, (new Date()).toISOString());
 
-      socket.updateData(jObj);
-
+      
       if ( DATA.length > MAX_STORE_DRONE ) {
         droneController.removeData(DATA[0]);
         DATA.shift();
       }
-
+      
+      socket.updateData(jObj);
       apiCalls();
     });
 }
