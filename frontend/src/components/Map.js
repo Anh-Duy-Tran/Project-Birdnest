@@ -9,12 +9,12 @@ import DroneDialog from './DroneDialog';
 
 const Container = styled.div`
   position: relative;
-  height : 100%;
+  width : 100%;
 `
 
 const Img = styled.img`
   object-fit: cover;
-  height: 100%;
+  width: 100%;
   user-drag: none;
 `
 

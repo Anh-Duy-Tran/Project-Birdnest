@@ -20,8 +20,9 @@ export const DroneProvider = ({ children }) => {
     });
     
     socket.on('update', ({ drones, violate }) => {
-      dispatch({type : "update-drones", payload : drones});
-      dispatch({type : "update-violate", payload : violate});
+      console.log(JSON.parse(violate));
+      dispatch({type : "update-drones", payload : JSON.parse(drones)});
+      dispatch({type : "update-violate", payload : JSON.parse(violate)});
     });
 
     return () => {

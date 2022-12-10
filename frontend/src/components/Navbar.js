@@ -50,6 +50,12 @@ const Center = styled.div`
   z-index: 10;
 `
 
+const Img = styled.img`
+  object-fit: cover;
+  height: 70px;
+  user-drag: none;
+`
+
 
 const Navbar = () => {
 
@@ -57,7 +63,7 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-
+          <Img src='Birdnest.png'></Img>
         </Left>
 
         <Center>

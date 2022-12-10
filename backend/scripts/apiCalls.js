@@ -5,7 +5,7 @@ import droneController from '../controllers/drones.js'
 import socket from '../utils/socket-io.js'
 
 const API_INTERVAL = 2;
-const TIME_INTERVAL = 0.1;
+const TIME_INTERVAL = 10;
 
 const MAX_STORE_DRONE = TIME_INTERVAL*60 / API_INTERVAL;
 
@@ -31,6 +31,7 @@ function apiCalls(){
       
       DATA.push(jObj);
 
+      // TODO: read the timestamp from the fetched data.
       droneController.addData(jObj, (new Date()).toISOString());
 
       socket.updateData(jObj);
@@ -39,6 +40,7 @@ function apiCalls(){
         droneController.removeData(DATA[0]);
         DATA.shift();
       }
+
       apiCalls();
     });
 }

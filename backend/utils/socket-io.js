@@ -22,8 +22,8 @@ const socketConnection = (server) => {
 
 const updateData = (payload) => {
   io.emit('update', { 
-    drones : payload["report"]["capture"]["drone"],
-    violate : dronesController.getAllViolatedDrone()
+    drones : JSON.stringify(payload["report"]["capture"]["drone"]),
+    violate : JSON.stringify(dronesController.getAllViolatedDrone())
   });
 }
 

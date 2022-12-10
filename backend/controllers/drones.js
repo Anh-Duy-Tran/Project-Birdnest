@@ -49,8 +49,14 @@ const getAllViolatedDrone = () => {
     })
   .map(
     key => {
-      return {serialNumber : key, closestDistance : DRONES[key]["closestDistance"]}
+      return {serialNumber : key, closestDistance : DRONES[key]["closestDistance"], history : getAllViolatedInstances(key) }
     }
+  )
+}
+
+const getAllViolatedInstances = (droneId) => {
+  return DRONES[droneId].coords.filter(
+    coord => coord.violated
   )
 }
 

@@ -3,7 +3,7 @@ import Map from "../../components/Map";
 import styled from 'styled-components';
 import { useContext } from "react";
 import { DroneContext } from "../../contexts/DroneProvider";
-import DroneStack from "../../components/DroneStack";
+import DroneTable from "../../components/DroneTable";
 
 const Container = styled.div`
   display: grid;
@@ -27,7 +27,7 @@ const MainPage = () => {
       <Navbar/>
       <Body>
         <Map/>
-        <DroneStack/>
+        <DroneTable/>
       </Body>
     </Container>
   )

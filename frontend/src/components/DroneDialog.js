@@ -58,7 +58,6 @@ export default function DroneDialog({ open }) {
   }
 
   const drone = state.droneDialog;
-  console.log(drone);
 
   return (
     <div>

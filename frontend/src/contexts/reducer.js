@@ -31,7 +31,7 @@ export const reducer = (state, action) => {
     case "update-violate" : {
       return {
         ...state,
-        violations : {...action.payload}
+        violations : [...action.payload]
       }
     }
 
