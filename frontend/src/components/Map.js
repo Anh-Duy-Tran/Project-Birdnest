@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { DroneContext } from '../contexts/DroneProvider';
 import Drone from './Drone';
-
 
 import { useElementSize } from 'usehooks-ts'
 import DroneDialog from './DroneDialog';

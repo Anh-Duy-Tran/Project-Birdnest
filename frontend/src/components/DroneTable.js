@@ -18,15 +18,17 @@ import { visuallyHidden } from '@mui/utils';
 
 import { DroneContext } from '../contexts/DroneProvider';
 import { Button } from '@mui/material';
+import { socket } from '../contexts/DroneProvider';
 
 import styled from 'styled-components';
+import PilotDialog from './PilotDialog';
 
 function createData(info, distance, history) {
   return {
     info,
     serialNumber : info.serialNumber,
     distance : Number((distance / 1000).toFixed(2)),
-    lastSeen : new Date(history.at(-1).timestamp).toUTCString(),
+    lastSeen : new Date(history.at(-1).timestamp).toLocaleString(),
     history : history.map(
       instance => {
         const roundedCoord = {...instance.coord}
@@ -36,7 +38,7 @@ function createData(info, distance, history) {
 
         return {
           ...instance,
-          timestamp : new Date(instance.timestamp).toUTCString(),
+          timestamp : new Date(instance.timestamp).toLocaleString(),
           coord : roundedCoord,
           distance : Number((instance.distance / 1000).toFixed(2))
         };
@@ -94,8 +96,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -150,8 +151,12 @@ function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
+  const onClickPilot = (droneId) => {
+    socket.emit('get-pilot-info', {serialNumber : droneId});
+  }
+
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
@@ -177,7 +182,14 @@ function Row(props) {
                 <Typography variant="h6" gutterBottom component="div">
                   Drone information
                 </Typography>
-                <Button variant="outlined" size = "small" sx={{marginLeft : "auto"}}>Get pilot information</Button>
+                <Button 
+                  variant="outlined" 
+                  size = "small" 
+                  sx={{marginLeft : "auto"}}
+                  onClick={() => onClickPilot(row.serialNumber)}
+                  >
+                    Get pilot information
+                </Button>
               </Wrapper>
 
               <Table size="small" aria-label="history">
@@ -224,7 +236,7 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
@@ -232,17 +244,11 @@ export default function DroneTable() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('serialNumber');
   const [selected, setSelected] = React.useState([]);
-  const [expanded, setExpanded] = React.useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   
-  const [ state, dispatch ] = React.useContext(DroneContext);
-
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const [ state ] = React.useContext(DroneContext);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -275,6 +281,7 @@ export default function DroneTable() {
 
   return (
     <Paper sx={{overflow : "auto"}}>
+      <PilotDialog/>
       <TableContainer>
         <Table stickyHeader aria-label="collapsible table">
           <EnhancedTableHead

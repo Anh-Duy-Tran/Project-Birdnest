@@ -1,8 +1,6 @@
 import Navbar from "../../components/Navbar";
 import Map from "../../components/Map";
 import styled from 'styled-components';
-import { useContext } from "react";
-import { DroneContext } from "../../contexts/DroneProvider";
 import DroneTable from "../../components/DroneTable";
 
 const Container = styled.div`
@@ -21,7 +19,6 @@ const Body = styled.div`
 `
 
 const MainPage = () => {
-  const [ state, dispatch ] = useContext(DroneContext);
   return (
     <Container>
       <Navbar/>

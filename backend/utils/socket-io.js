@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import dronesController from '../controllers/drones.js';
+import pilotServices from '../services/pilots.js';
 
 let io;
 
@@ -18,8 +19,10 @@ const socketConnection = (server) => {
       console.log('user disconnected');
     });
 
-    socket.on('get-pilot-info', () => {
-      
+    socket.on('get-pilot-info', async ({serialNumber}) => {
+      socket.emit('pilot-info', { 
+        pilot : JSON.stringify(await pilotServices.getPilotInfo(serialNumber))
+      })
     })
   })
 }

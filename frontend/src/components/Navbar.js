@@ -61,7 +61,7 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-          <Img src='Birdnest.png'></Img>
+          <Img src='birdnest.png'></Img>
         </Left>
 
         <Center>

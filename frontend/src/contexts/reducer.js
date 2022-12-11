@@ -49,6 +49,20 @@ export const reducer = (state, action) => {
       }
     }
 
+    case "pilot-info" : {
+      return {
+        ...state,
+        pilotDialog : {...action.payload}
+      }
+    }
+
+    case "close-pilot-dialog" : {
+      return {
+        ...state,
+        pilotDialog : null
+      }
+    }
+
     default:
       return state
   }
@@ -61,5 +75,5 @@ export const initialState = {
   mapsize: null,
   violations: null,
   droneDialog: null,
-  pilotInfo: null
+  pilotDialog: null
 }
