@@ -63,6 +63,13 @@ export const reducer = (state, action) => {
       }
     }
 
+    case "update-search-query" : {
+      return {
+        ...state,
+        searchQuery : action.payload
+      }
+    }
+
     default:
       return state
   }
@@ -75,5 +82,6 @@ export const initialState = {
   mapsize: null,
   violations: null,
   droneDialog: null,
-  pilotDialog: null
+  pilotDialog: null,
+  searchQuery : ''
 }

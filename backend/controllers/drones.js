@@ -1,12 +1,13 @@
 import { DRONES } from "../models/drones.js";
 import coordValidate from "./droneChecker.js";
+import pilotServices from "../services/pilots.js"
 
 
 const addData = (data, timestamp) => {
   const drones = data["report"]["capture"]["drone"];
 
   drones.forEach(
-    drone => {
+    async drone => {
       const serialNumber = drone["serialNumber"];
       
       const coord = {
@@ -26,6 +27,7 @@ const addData = (data, timestamp) => {
         const metaData = (({positionY, positionX, altitude, ...data }) => ({ info : data}))(drone)
         metaData["coords"] = [coordObj]
         metaData["violationCount"] = isViolated ? 1 : 0;
+        metaData["pilot"] = await pilotServices.getPilotInfo(serialNumber);
         metaData["closestDistance"] = distanceToOrigin;  
         DRONES[serialNumber] = metaData;
       }

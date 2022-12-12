@@ -23,8 +23,6 @@ const Map = () => {
 
   const [ state, dispatch ] = useContext(DroneContext);
 
-  // dispatch({ type : "close-drone-dialog" });
-
   const handleOpen = (drone) => {
     dispatch({type : "open-drone-dialog", payload : drone});
   }

@@ -42,7 +42,7 @@ const Right = styled.div`
 `
 
 const Center = styled.div`
-  flex: 1;
+  flex: 2;
   justify-content: flex-center;
   align-items: center;
   text-align: center;
@@ -65,7 +65,7 @@ const Navbar = () => {
         </Left>
 
         <Center>
-          <p>Project Birdnest</p>
+          <p>PROJECT BIRDNEST</p>
         </Center>
 
         <Right>

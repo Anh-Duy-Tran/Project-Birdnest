@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { reducer, initialState } from "./reducer.js";
 import io from 'socket.io-client';
 
-export const socket = io.connect("http://localhost:8001");
+export const socket = io.connect("http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com");
 
 export const DroneContext = React.createContext(initialState);
 
@@ -22,10 +22,6 @@ export const DroneProvider = ({ children }) => {
     socket.on('update', ({ drones, violate }) => {
       dispatch({type : "update-drones", payload : JSON.parse(drones)});
       dispatch({type : "update-violate", payload : JSON.parse(violate)});
-    });
-    
-    socket.on('pilot-info', ({ pilot }) => {
-      dispatch({type : "pilot-info", payload : JSON.parse(pilot)});
     });
 
     return () => {

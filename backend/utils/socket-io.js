@@ -7,7 +7,7 @@ let io;
 const socketConnection = (server) => {
   io = new Server(server, {
     cors : {
-      origin : "http://localhost:3000",
+      origin : "http://local",
       methods : ["GET", "POST"]
     }
   });
@@ -18,12 +18,6 @@ const socketConnection = (server) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
     });
-
-    socket.on('get-pilot-info', async ({serialNumber}) => {
-      socket.emit('pilot-info', { 
-        pilot : JSON.stringify(await pilotServices.getPilotInfo(serialNumber))
-      })
-    })
   })
 }
 

@@ -16,15 +16,18 @@ import TablePagination from '@mui/material/TablePagination';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 
+
 import { DroneContext } from '../contexts/DroneProvider';
 import { Button } from '@mui/material';
-import { socket } from '../contexts/DroneProvider';
 
 import styled from 'styled-components';
 import PilotDialog from './PilotDialog';
+import SearchBar from './SearchBar';
 
-function createData(info, distance, history) {
+function createData(pilot, info, distance, history) {
   return {
+    pilotId : pilot.pilotId,
+    pilot,
     info,
     serialNumber : info.serialNumber,
     distance : Number((distance / 1000).toFixed(2)),
@@ -76,14 +79,20 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+    id: 'pilotId',
+    numeric: false,
+    disablePadding: false,
+    label: 'Pilot ID',
+  },
+  {
     id: 'serialNumber',
     numeric: false,
     disablePadding: false,
-    label: 'Serial number',
+    label: 'Drone Serial number',
   },
   {
     id: 'lastSeen',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Last violation',
   },
@@ -97,6 +106,7 @@ const headCells = [
 
 function EnhancedTableHead(props) {
   const { order, orderBy, onRequestSort } = props;
+  
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -148,11 +158,11 @@ const attributeLabel = {
 }
 
 function Row(props) {
-  const { row } = props;
+  const { row, dispatch } = props;
   const [open, setOpen] = React.useState(false);
 
-  const onClickPilot = (droneId) => {
-    socket.emit('get-pilot-info', {serialNumber : droneId});
+  const onClickPilot = () => {
+    dispatch({type : "pilot-info", payload : row.pilot});
   }
 
   return (
@@ -166,6 +176,9 @@ function Row(props) {
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.pilot.pilotId}
         </TableCell>
         <TableCell component="th" scope="row">
           {row.serialNumber}
@@ -248,7 +261,7 @@ export default function DroneTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   
-  const [ state ] = React.useContext(DroneContext);
+  const [ state, dispatch ] = React.useContext(DroneContext);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -275,12 +288,20 @@ export default function DroneTable() {
   };
 
   const rows = state.violations !== null
-    ? state.violations.map(
-        drone => createData(drone.info, drone.closestDistance, drone.history))
+    ? state.violations
+        .filter(drone => {
+          const pilotId = drone.pilot.pilotId.toLowerCase();
+          return pilotId.includes(state.searchQuery)
+        })
+        .map(
+          drone => 
+            createData(drone.pilot, drone.info, drone.closestDistance, drone.history)
+          )
     : []
 
   return (
     <Paper sx={{overflow : "auto"}}>
+      <SearchBar/>
       <PilotDialog/>
       <TableContainer>
         <Table stickyHeader aria-label="collapsible table">
@@ -297,7 +318,7 @@ export default function DroneTable() {
               stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
-                  <Row key={row.serialNumber} row={row} />
+                  <Row key={row.serialNumber} row={row} dispatch={dispatch}/>
                 ))
             }
           </TableBody>
