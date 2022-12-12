@@ -42,6 +42,10 @@ function apiCalls(){
       
       socket.updateData(jObj);
       apiCalls();
+    })
+    .catch(err => {
+      console.log(err);
+      setTimeout(() => apiCalls(), 1000);
     });
 }
 
