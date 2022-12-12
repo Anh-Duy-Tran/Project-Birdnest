@@ -1,3 +1,7 @@
+/**
+ * Service to fetch the pilot info
+ */
+
 import axios from "axios";
 
 const PILOT_URL = "https://assignments.reaktor.com/birdnest/pilots/"

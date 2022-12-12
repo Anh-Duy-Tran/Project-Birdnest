@@ -1,13 +1,16 @@
+/**
+ * Setup socket connection with socketio
+ */
+
 import { Server } from 'socket.io';
 import dronesController from '../controllers/drones.js';
-import pilotServices from '../services/pilots.js';
 
 let io;
 
 const socketConnection = (server) => {
   io = new Server(server, {
     cors : {
-      origin : "http://local",
+      origin : "http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com/",
       methods : ["GET", "POST"]
     }
   });

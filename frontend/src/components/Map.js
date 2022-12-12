@@ -17,7 +17,6 @@ const Img = styled.img`
   user-drag: none;
 `
 
-
 const Map = () => {
   const [ squareRef, {width, height} ] = useElementSize();
 

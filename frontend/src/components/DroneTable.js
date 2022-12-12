@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -15,12 +16,12 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import TablePagination from '@mui/material/TablePagination';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
-
-
-import { DroneContext } from '../contexts/DroneProvider';
 import { Button } from '@mui/material';
 
+import { DroneContext } from '../contexts/DroneProvider';
+
 import styled from 'styled-components';
+
 import PilotDialog from './PilotDialog';
 import SearchBar from './SearchBar';
 

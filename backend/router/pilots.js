@@ -1,3 +1,8 @@
+/**
+ * API endpoints for getting the pilots data
+ * only allow to get pilot data when violated.
+ */
+
 import { Router } from 'express';
 import droneController from '../controllers/drones.js';
 import pilotServices from '../services/pilots.js';

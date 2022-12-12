@@ -1,3 +1,8 @@
+/**
+ * This module contains the logic for distance calculation and store the Origin coordinate.
+ */
+
+
 const ORIGIN = {
   x : 250000,
   y : 250000

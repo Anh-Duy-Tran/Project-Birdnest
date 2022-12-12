@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { reducer, initialState } from "./reducer.js";
 import io from 'socket.io-client';
 
-export const socket = io.connect("http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com");
+export const socket = io.connect("http://localhost:3001");
 
 export const DroneContext = React.createContext(initialState);
 

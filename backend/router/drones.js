@@ -1,3 +1,7 @@
+/**
+ * API endpoints for getting the drones data
+ */
+
 import { Router } from 'express';
 
 import dronesController from '../controllers/drones.js'

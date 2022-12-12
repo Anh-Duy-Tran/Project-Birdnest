@@ -1,3 +1,7 @@
+/**
+ * Drone controller contains all the business logic for the recorded drones data.
+ */
+
 import { DRONES } from "../models/drones.js";
 import coordValidate from "./droneChecker.js";
 import pilotServices from "../services/pilots.js"
@@ -20,6 +24,12 @@ const addData = (data, timestamp) => {
       
       if (serialNumber in DRONES) {
         const drone = DRONES[serialNumber];
+        
+        // fetch data of pilot only if violated.
+        if (isViolated && !("pilot" in drone)) {
+          drone["pilot"] = await pilotServices.getPilotInfo(serialNumber);
+        }
+        
         drone["coords"].push(coordObj);
         drone["violationCount"] += isViolated ? 1 : 0;
         drone["closestDistance"] = Math.min(distanceToOrigin, drone["closestDistance"]);    
@@ -27,7 +37,12 @@ const addData = (data, timestamp) => {
         const metaData = (({positionY, positionX, altitude, ...data }) => ({ info : data}))(drone)
         metaData["coords"] = [coordObj]
         metaData["violationCount"] = isViolated ? 1 : 0;
-        metaData["pilot"] = await pilotServices.getPilotInfo(serialNumber);
+        
+        // fetch data of pilot only if violated.
+        if (isViolated) {
+          metaData["pilot"] = await pilotServices.getPilotInfo(serialNumber);
+        }
+
         metaData["closestDistance"] = distanceToOrigin;  
         DRONES[serialNumber] = metaData;
       }
@@ -45,16 +60,17 @@ const getDroneBySerialNumber = (id) => {
 
 const getAllViolatedDrone = () => {
   return Object
-  .keys(DRONES).filter(
-    key => {
-      return DRONES[key]["violationCount"] > 0;
-    })
-  .map(
-    key => {
-      const {coords, ...info} = DRONES[key];
-      return {...info, closestDistance : DRONES[key]["closestDistance"], history : getAllViolatedInstances(key) }
-    }
-  )
+    .keys(DRONES)
+    .filter(
+      key => {
+        return DRONES[key]["violationCount"] > 0;
+      })
+    .map(
+      key => {
+        const {coords, ...info} = DRONES[key];
+        return {...info, history : getAllViolatedInstances(key) }
+      }
+    )
 }
 
 const getAllViolatedInstances = (droneId) => {
@@ -64,7 +80,7 @@ const getAllViolatedInstances = (droneId) => {
 }
 
 const updateClosestDistance = (droneId) => {
-  DRONES[droneId].closestDistance = DRONES[droneId].coords.reduce( (a, c) => Math.min(a, c.distance), 500000);
+  DRONES[droneId].closestDistance = DRONES[droneId].coords.reduce( (a, c) => Math.min(a, c.distance), 500000 );
 }
 
 const removeData = (data) => {
@@ -75,7 +91,12 @@ const removeData = (data) => {
       const serialNumber = drone["serialNumber"];
       
       const removedCoord = DRONES[serialNumber]["coords"].shift();
+
       DRONES[serialNumber]["violationCount"] -= removedCoord["violated"] ? 1 : 0;
+
+      if (DRONES[serialNumber]["violationCount"] === 0) {
+        delete DRONES[serialNumber]["pilot"];
+      }
       
       updateClosestDistance(serialNumber);
 
