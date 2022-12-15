@@ -27,7 +27,7 @@ import SearchBar from './SearchBar';
 
 function createData(pilot, info, distance, history) {
   return {
-    pilotId : pilot.pilotId,
+    pilotId : pilot !== undefined ? pilot.pilotId : '404 Canot found',
     pilot,
     info,
     serialNumber : info.serialNumber,
@@ -179,7 +179,7 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.pilot.pilotId}
+          {row.pilotId}
         </TableCell>
         <TableCell component="th" scope="row">
           {row.serialNumber}
@@ -291,7 +291,7 @@ export default function DroneTable() {
   const rows = state.violations !== null
     ? state.violations
         .filter(drone => {
-          const pilotId = drone.pilot.pilotId.toLowerCase();
+          const pilotId = drone.pilot !== undefined ? drone.pilot.pilotId.toLowerCase() : '404 Canot found';
           return pilotId.includes(state.searchQuery)
         })
         .map(

@@ -61,7 +61,7 @@ export default function PilotDialog() {
         sx={{overflow : "auto"}}
       >
       {
-        state.pilotDialog !== null
+        pilot !== null && pilot !== undefined
         ? <>
           <BootstrapDialogTitle onClose={handleClose}>
             {pilot.pilotId}
