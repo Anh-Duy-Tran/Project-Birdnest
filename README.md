@@ -16,7 +16,7 @@
 - You can click on the drone with the rocket icon to show more information about the drone.
 - The pilot information of the NDZ violating drone can be access by expand the table row on the right by the arrow button and click on "GET PILOT INFORMATION" button.
 
-<h2>API endpoint list</h2>
+<h2>API endpoints</h2>
 
 Base url: [http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com/](http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com/)
 
