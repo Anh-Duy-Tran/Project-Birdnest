@@ -1,6 +1,6 @@
 <h1> PROJECT BIRDNEST </h1>
 
-[The link to the web app: Project Birdnest](http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com/)
+[Link to the web app: Project Birdnest](http://ec2-13-48-78-125.eu-north-1.compute.amazonaws.com/)
 
 <h2>Objective</h2>
 
